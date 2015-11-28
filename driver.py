@@ -7,9 +7,9 @@ import random
 import numpy
 from multiprocessing import Process, Queue
 
-LOADC = 'loadClient'
-LOADL = 'loadLobbyist'
-LOADE = 'loadEmp'
+LOADC = 'LOAD_CLIENT'
+LOADL = 'LOAD_LOBBYIST'
+LOADE = 'LOAD_EMP'
 
 #The following parameters can be changed for TESTING only
 NUM_PROCS = 4 #Amount of parallel processes to do read and write operations
@@ -77,13 +77,22 @@ def runLobbyDB():
             finally:
                 dbClient.closeConnection
 
+def getStatString(key, hist):
+    if hist.get_total_count() == 0:
+        d = {50:0,95:0,99:0,100:0}
+    else:
+        d = hist.get_percentile_to_value_dict([50,95,99,100])
+
+    return "%40s -  Latency Perecentiles(ms) - 50th:%4.2f, 95th:%4.2f, 99th:%4.2f, 100th:%4.2f - Count:%s" % (key, d[50],d[95],d[99],d[100], hist.get_total_count() )
+
 def printStats(opHists,loadHists):
     print "Load Operation Times"
     for key in loadHists.keys():
-        print key, loadHists[key].get_percentile_to_value_dict([50,95,99,100])
+        print getStatString(key, loadHists[key])
     print "Operation Times"
     for key in opHists.keys():
-        print key, opHists[key].get_percentile_to_value_dict([50,95,99,100])
+        print getStatString(key, opHists[key])
+
 #from http://stackoverflow.com/questions/2130016/splitting-a-list-of-arbitrary-size-into-only-roughly-n-equal-parts
 def chunkList(seq, num):
   avg = len(seq) / float(num)
@@ -174,7 +183,7 @@ def loadInitialData(dfs, dbClient):
         dbClient.loadLobbyistAndCreateEmployerClientConnection(r['LOBBYIST_ID'], r['EMPLOYER_ID'], r['CLIENT_ID'], r['LOBBYIST_SALUTATION'],r['LOBBYIST_FIRST_NAME'],r['LOBBYIST_LAST_NAME'])
         e = datetime.now()
         time = e - s
-        loade.record_value(time.total_seconds() * 1000)
+        loadl.record_value(time.total_seconds() * 1000)
     hists[LOADL] = loadl
     end = datetime.now()
     time = end - start
