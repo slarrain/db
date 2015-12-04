@@ -16,7 +16,7 @@ NUM_PROCS = 4 #Amount of parallel processes to do read and write operations
 LIMIT_OPS = None #Limit the number of operations
 DO_LOAD = True #do the initial loading of clients, lobbyists, and employers
 DO_OPERATIONS = True #do the operation phase of reading and writing
-DO_ANALYZE = False #TBD
+DO_ANALYZE = True #TBD
 
 def runLobbyDB():
     dfs = loadDFs()
@@ -74,6 +74,10 @@ def runLobbyDB():
             try:
                 dbClient.openConnection()
                 analyzeHists = analyzeData(dfs, dbClient)
+                print "Load Analyze Times"
+                for key in analyzeHists.keys():
+                    print getStatString(key, analyzeHists[key])
+
             finally:
                 dbClient.closeConnection
 
@@ -237,9 +241,19 @@ def runOperations(dfs, dbClient, ops, q, i):
 
 def analyzeData(dfs, dbClient):
     print "Analyzing Data"
-    hists = {}
-    #COMING IN A PATCH
-    return hists
+    ahists = {'MOST_PRODUCTIVE_LOBBYIST': getHist(), 'LEAST_EFFICIENT_CLIENT':getHist()}
+
+    s = datetime.now()
+    dbClient.findMostProductiveLobbyist()
+    e = datetime.now()
+    time = e - s
+    ahists['MOST_PRODUCTIVE_LOBBYIST'].record_value(time.total_seconds() * 1000)
+    s = datetime.now()
+    dbClient.findLeastEfficientClient()
+    e = datetime.now()
+    time = e - s
+    ahists['LEAST_EFFICIENT_CLIENT'].record_value(time.total_seconds() * 1000)
+    return ahists
 
 if __name__ == "__main__":
     runLobbyDB()

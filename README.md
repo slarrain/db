@@ -1,4 +1,10 @@
 # HW 5
+This HW is due Thurs 12/10 at 11:59 AM (i.e. noon). Partners can only use late days based on the min of the group (ie I have 1 slack day left and Adam has 3, we can only use 1). HWs after 
+Sunday will not be accepted. Please commit and push to your github.  When you are submitting your HW do the following
+
+ - Create a tag `git tag -a hw5 -m "My HW5 Submssion - Aaron and Adam"` Don't forget to push.
+ - Email Adam and myself your commit hash for the submitted version.
+
 
 ## To run
  - python driver.py

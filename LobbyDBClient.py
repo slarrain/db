@@ -13,17 +13,18 @@ class client:
         print "Closing Connection"
         return True
 
-    #Note that a client may be loaded multiple times. Only load once per client_id
+    #Note that a client may be loaded multiple times. Only load once per client_id. optional extra credit: update if value changes
     def loadClient(self, client_id, name, address1, address2, city, state, zip):
         return True
 
     #Load an employer.
-    #Note that an employer may get loaded multiple times. only load once per employer_id
+    #Note that an employer may get loaded multiple times. only load once per employer_id.  Only load once per client_id. optional extra credit: update if value changes
     def loadEmployer(self, employer_id, name, address1, address2, city, state, zip):
         return True
 
     #Loads a lobbyist. Creates a connection for a lobbyist an employer and client
-    #Note that this can be called multiple times per lobbyist. Load one Lobbyist per lobbyist_id
+    #Note that this can be called multiple times per lobbyist. Load one Lobbyist per lobbyist_id. 
+    # Only load once per client_id. optional extra credit: update if value changes
     #Each connection/relationship should be recorded.
     def loadLobbyistAndCreateEmployerClientConnection(self, lobbyist_id, employer_id, client_id, lobbyist_salutation,lobbyist_first_name,lobbyist_last_name):
         return True
@@ -67,4 +68,12 @@ class client:
 
     #Return the count of lobvying activity on behalf of a client. 0 if none exists
     def countActivityByClientId(self, client_id):
+        return True
+
+    #Find the lobbyist (id,name) who has the most level of activity per dollar spent
+    def findMostProductiveLobbyist(self):
+        return True
+    
+    #Find the client(id) who spent more than the average per client, and received the lowest amount of activity per dollar spent
+    def findLeastEfficientClient(self):
         return True
