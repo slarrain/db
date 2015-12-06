@@ -79,7 +79,7 @@ def runLobbyDB():
                     print getStatString(key, analyzeHists[key])
 
             finally:
-                dbClient.closeConnection
+                dbClient.closeConnection()
 
 def getStatString(key, hist):
     if hist.get_total_count() == 0:
