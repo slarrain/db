@@ -6,6 +6,7 @@ from datetime import datetime
 import random
 import numpy
 from multiprocessing import Process, Queue
+import sys
 
 LOADC = 'LOAD_CLIENT'
 LOADL = 'LOAD_LOBBYIST'
@@ -27,6 +28,8 @@ def runLobbyDB():
             dbClient = LobbyDBClient.client()
             dbClient.openConnection()
             loadHists = loadInitialData(dfs, dbClient)
+        except:
+            print "Error:", sys.exc_info()[0]
         finally:
             dbClient.closeConnection()
 
@@ -42,7 +45,7 @@ def runLobbyDB():
             for i, ops in enumerate(splitOpList):
 
                 _dbC = LobbyDBClient.client()
-                _dbC.openConnection
+                _dbC.openConnection()
                 p = Process(target=runOperations, args=(dfs,_dbC,ops,q,i))
                 p.start()
                 procs.append(p)
@@ -66,6 +69,8 @@ def runLobbyDB():
 
 
             printStats(opHists,loadHists)
+        except:
+            print "Error:", sys.exc_info()[0]
         finally:
             for _dbC in dbClients:
                 _dbC.closeConnection()
@@ -78,6 +83,8 @@ def runLobbyDB():
                 for key in analyzeHists.keys():
                     print getStatString(key, analyzeHists[key])
 
+            except:
+                print "Error:", sys.exc_info()[0]
             finally:
                 dbClient.closeConnection()
 
