@@ -19,7 +19,6 @@ class client:
 
     #Close any active connection(should be able to handle closing a closed conn)
     def closeConnection(self):
-        self.conn.commit()
         self.conn.close()
         print "Closing Connection"
         #return True
@@ -38,7 +37,8 @@ class client:
         q = '''INSERT INTO employer (employer_id, name, address1, address2, city, state, zip)
             values (%s, %s, %s, %s, %s, %s, %s);'''
         p = (employer_id, name, address1, address2, city, state, zip, )
-        self.cur.execute(q, p)
+        with self.conn.cursor() as cur:
+            cur.execute(q, p))
 
     #Loads a lobbyist. Creates a connection for a lobbyist an employer and client
     #Note that this can be called multiple times per lobbyist. Load one Lobbyist per lobbyist_id.
@@ -53,7 +53,8 @@ class client:
         q = '''INSERT INTO expenditure (expenditure_id, lobbyist_id, action, amount, expenditure_date, purpose, recipient, client_id)
             values (%s, %s, %s, %s, %s, %s, %s, %s);'''
         p = (expenditure_id, lobbyist_id, action, amount, expenditure_date, purpose, recipient, client_id,)
-        self.cur.execute(q, p)
+        with self.conn.cursor() as cur:
+            cur.execute(q, p)
 
     #Return a record/tuple for expenditure if exists
     def readExpenditureById(self, expenditure_id):
