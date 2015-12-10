@@ -34,7 +34,10 @@ class client:
     #Load an employer.
     #Note that an employer may get loaded multiple times. only load once per employer_id.  Only load once per client_id. optional extra credit: update if value changes
     def loadEmployer(self, employer_id, name, address1, address2, city, state, zip):
-        return True
+        q = "INSERT INTO employer (employer_id, name, address1, address2, city, state, zip)
+            values (%s, %s, %s, %s, %s, %s, %s);"
+        p = (employer_id, name, address1, address2, city, state, zip, )
+        self.cur.execute(q, p)
 
     #Loads a lobbyist. Creates a connection for a lobbyist an employer and client
     #Note that this can be called multiple times per lobbyist. Load one Lobbyist per lobbyist_id.
