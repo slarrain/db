@@ -1,3 +1,5 @@
+CREATE DATABASE lobbydb;
+
 CREATE TABLE client (
     CLIENT_ID     INTEGER   PRIMARY KEY,
     NAME          VARCHAR,

@@ -1,12 +1,22 @@
-#DB DRIVER CLASS
-#IMPLEMENT THESE FUNCTIONS
+import psycopg2
+
 class client:
     def __init__(self):
-        pass
+        self.conn = None
+        self.cur = None
     #open a connection to a psql database
     def openConnection(self):
+        conn_string = "host='localhost' dbname='lobbydb' user='postgres' password=''"
         print "Opening a Connection"
-        return True
+        try:
+            self.conn = psycopg2.connect(conn_string)
+            print "Connected"
+            self.cur = self.conn.cursor()
+            #return True
+        except:
+            print "Connection Failed!"
+            #return False
+            
 
     #Close any active connection(should be able to handle closing a closed conn)
     def closeConnection(self):
@@ -23,7 +33,7 @@ class client:
         return True
 
     #Loads a lobbyist. Creates a connection for a lobbyist an employer and client
-    #Note that this can be called multiple times per lobbyist. Load one Lobbyist per lobbyist_id. 
+    #Note that this can be called multiple times per lobbyist. Load one Lobbyist per lobbyist_id.
     # Only load once per client_id. optional extra credit: update if value changes
     #Each connection/relationship should be recorded.
     def loadLobbyistAndCreateEmployerClientConnection(self, lobbyist_id, employer_id, client_id, lobbyist_salutation,lobbyist_first_name,lobbyist_last_name):
@@ -73,7 +83,7 @@ class client:
     #Find the lobbyist (id,name) who has the most level of activity per dollar spent
     def findMostProductiveLobbyist(self):
         return True
-    
+
     #Find the client(id) who spent more than the average per client, and received the lowest amount of activity per dollar spent
     def findLeastEfficientClient(self):
         return True
