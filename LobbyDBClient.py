@@ -20,8 +20,10 @@ class client:
 
     #Close any active connection(should be able to handle closing a closed conn)
     def closeConnection(self):
+        self.conn.commit()
+        self.conn.close()
         print "Closing Connection"
-        return True
+        #return True
 
     #Note that a client may be loaded multiple times. Only load once per client_id. optional extra credit: update if value changes
     def loadClient(self, client_id, name, address1, address2, city, state, zip):
