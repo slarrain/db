@@ -16,7 +16,6 @@ class client:
         except:
             print "Connection Failed!"
             #return False
-            
 
     #Close any active connection(should be able to handle closing a closed conn)
     def closeConnection(self):
@@ -25,7 +24,10 @@ class client:
 
     #Note that a client may be loaded multiple times. Only load once per client_id. optional extra credit: update if value changes
     def loadClient(self, client_id, name, address1, address2, city, state, zip):
-        return True
+        q = "INSERT INTO client (client_id, name, address1, address2, city, state, zip)
+            values (%s, %s, %s, %s, %s, %s, %s);"
+        p = (client_id, name, address1, address2, city, state, zip, )
+        self.cur.execute(q, p)
 
     #Load an employer.
     #Note that an employer may get loaded multiple times. only load once per employer_id.  Only load once per client_id. optional extra credit: update if value changes
