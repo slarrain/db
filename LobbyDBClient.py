@@ -3,7 +3,7 @@ import psycopg2
 class client:
     def __init__(self):
         self.conn = None
-        self.cur = None
+        #self.cur = None
     #open a connection to a psql database
     def openConnection(self):
         conn_string = "host='localhost' dbname='lobbydb' user='postgres' password=''"
@@ -11,7 +11,7 @@ class client:
         try:
             self.conn = psycopg2.connect(conn_string)
             print "Connected"
-            self.cur = self.conn.cursor()
+            #self.cur = self.conn.cursor()
             #return True
         except:
             print "Connection Failed!"
@@ -24,10 +24,11 @@ class client:
 
     #Note that a client may be loaded multiple times. Only load once per client_id. optional extra credit: update if value changes
     def loadClient(self, client_id, name, address1, address2, city, state, zip):
-        q = "INSERT INTO client (client_id, name, address1, address2, city, state, zip)
-            values (%s, %s, %s, %s, %s, %s, %s);"
+        q = """INSERT INTO client (client_id, name, address1, address2, city, state, zip)
+            values (%s, %s, %s, %s, %s, %s, %s);"""
         p = (client_id, name, address1, address2, city, state, zip, )
-        self.cur.execute(q, p)
+        with self.conn.cursor() as cur:
+            cur.execute(q, p)
 
     #Load an employer.
     #Note that an employer may get loaded multiple times. only load once per employer_id.  Only load once per client_id. optional extra credit: update if value changes
