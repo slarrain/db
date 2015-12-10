@@ -58,7 +58,13 @@ class client:
 
     #Return a record/tuple for expenditure if exists
     def readExpenditureById(self, expenditure_id):
-        return True
+        q = '''SELECT * FROM expenditure WHERE expenditure_id = (%s);'''
+        p = (expenditure_id,)
+        with self.conn.cursor() as cur:
+            cur.execute(q, p)
+        records = cur.fetchall()
+        if records:
+            return records
 
     #Return all records/tuples for expenditures by a lobbyist_id if exists
     def readExpendituresByLobbyistId(self, lobbyist_id):
