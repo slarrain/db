@@ -34,8 +34,8 @@ class client:
     #Load an employer.
     #Note that an employer may get loaded multiple times. only load once per employer_id.  Only load once per client_id. optional extra credit: update if value changes
     def loadEmployer(self, employer_id, name, address1, address2, city, state, zip):
-        q = "INSERT INTO employer (employer_id, name, address1, address2, city, state, zip)
-            values (%s, %s, %s, %s, %s, %s, %s);"
+        q = '''INSERT INTO employer (employer_id, name, address1, address2, city, state, zip)
+            values (%s, %s, %s, %s, %s, %s, %s);'''
         p = (employer_id, name, address1, address2, city, state, zip, )
         self.cur.execute(q, p)
 
@@ -49,7 +49,10 @@ class client:
     #Insert an expenditure. IDs are ints. amount can be rounded to int.
     #Recipient is a string which can be limited to 250 characters
     def insertExpenditure(self, expenditure_id, lobbyist_id, action, amount, expenditure_date, purpose, recipient, client_id):
-        return True
+        q = '''INSERT INTO expenditure (expenditure_id, lobbyist_id, action, amount, expenditure_date, purpose, recipient, client_id)
+            values (%s, %s, %s, %s, %s, %s, %s, %s);'''
+        p = (expenditure_id, lobbyist_id, action, amount, expenditure_date, purpose, recipient, client_id,)
+        self.cur.execute(q, p)
 
     #Return a record/tuple for expenditure if exists
     def readExpenditureById(self, expenditure_id):
