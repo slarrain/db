@@ -72,6 +72,9 @@ class client:
         p = (lobbyist_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
+        records = cur.fetchall()
+        if records:
+            return records
 
     #insert a compensation. IDs are ints, amount can be rounded to int.
     def insertCompensation(self, compensation_id, lobbyist_id, compensation_amount, client_id):
@@ -87,6 +90,9 @@ class client:
         p = (compensation_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
+        records = cur.fetchall()
+        if records:
+            return records
 
     #Return all records/tuples for compensations by a client_id if exists
     def readCompensationsByClientId(self, client_id):
@@ -100,6 +106,9 @@ class client:
         p = (compensation_amount_min, compensation_amount_max,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
+        records = cur.fetchall()
+        if records:
+            return records
 
     #Insert a lobbying activity. action sought and department can be truncated to 250 characters
     def insertActivity(self, lobbying_activity_id, action_sought, deparment, client_id, lobbyist_id):
@@ -115,6 +124,9 @@ class client:
         p = (lobbying_activity_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
+        records = cur.fetchall()
+        if records:
+            return records
 
     #Return the count of lobvying activity on behalf of a client. 0 if none exists
     def countActivityByClientId(self, client_id):
@@ -134,9 +146,11 @@ class client:
             GROUP BY LOBBYIST_ID)
             SELECT LOBBYIST_ID,LOBBYIST_FIRST_NAME,LOBBYIST_LAST_NAME FROM temp_table JOIN lobbyist
             on temp_table.LOBBYIST_ID=lobbyist.LOBBYIST_ID WHERE act_per_doll=max(act_per_doll);'''
-        p = (lobbying_activity_id,)
         with self.conn.cursor() as cur:
-            cur.execute(q, p)
+            cur.execute(q)
+        records = cur.fetchall()
+        if records:
+            return records
 
     #Find the client(id) who spent more than the average per client, and received the lowest amount of activity per dollar spent
     def findLeastEfficientClient(self):
