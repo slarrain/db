@@ -31,7 +31,8 @@ class client:
         p = (relation, relation_id, rid, )
         with self.conn.cursor() as cur:
             cur.execute(q, p)
-        if cur.fetchall():
+            n = cur.fetchall()
+        if n:
             return False
         else:
             return True
@@ -98,7 +99,7 @@ class client:
         p = (lobbyist_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
-        records = cur.fetchall()
+            records = cur.fetchall()
         if records:
             return records
 
@@ -109,7 +110,7 @@ class client:
         p = (compensation_id, lobbyist_id, int(compensation_amount), client_id)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
-        records = cur.fetchall()
+            records = cur.fetchall()
         if records:
             return records
 
@@ -119,7 +120,7 @@ class client:
         p = (compensation_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
-        records = cur.fetchall()
+            records = cur.fetchall()
         if records:
             return records
 
@@ -129,7 +130,7 @@ class client:
         p = (client_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
-        records = cur.fetchall()
+            records = cur.fetchall()
         if records:
             return records
 
@@ -139,7 +140,7 @@ class client:
         p = (compensation_amount_min, compensation_amount_max,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
-        records = cur.fetchall()
+            records = cur.fetchall()
         if records:
             return records
 
@@ -157,7 +158,7 @@ class client:
         p = (lobbying_activity_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
-        records = cur.fetchall()
+            records = cur.fetchall()
         if records:
             return records
 
@@ -185,7 +186,7 @@ class client:
             on temp_table.LOBBYIST_ID=lobbyist.LOBBYIST_ID WHERE act_per_doll=max(act_per_doll);'''
         with self.conn.cursor() as cur:
             cur.execute(q)
-        records = cur.fetchall()
+            records = cur.fetchall()
         if records:
             return records
 
