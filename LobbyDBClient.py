@@ -4,6 +4,7 @@ class client:
     def __init__(self):
         self.conn = None
         #self.cur = None
+
     #open a connection to a psql database
     def openConnection(self):
         conn_string = "host='localhost' dbname='lobbydb' user='postgres' password=''"
@@ -26,8 +27,19 @@ class client:
             print "Connection already closed"
         #return True
 
+    def check_loaded (rid, relation):
+        relation_id = relation+'_id'
+        q = """SELECT COUNT(*) FROM (%s) WHERE (%s)=(%s);"""
+        p = (relation, relation_id, rid, )
+        with self.conn.cursor() as cur:
+            cur.execute(q, p)
+        if cur.fetchall():
+            return True
+        else:
+            return False
     #Note that a client may be loaded multiple times. Only load once per client_id. optional extra credit: update if value changes
     def loadClient(self, client_id, name, address1, address2, city, state, zip):
+
         q = """INSERT INTO client (client_id, name, address1, address2, city, state, zip)
             values (%s, %s, %s, %s, %s, %s, %s);"""
         p = (client_id, name, address1, address2, city, state, zip, )
@@ -48,8 +60,17 @@ class client:
     # Only load once per client_id. optional extra credit: update if value changes
     #Each connection/relationship should be recorded.
     def loadLobbyistAndCreateEmployerClientConnection(self, lobbyist_id, employer_id, client_id, lobbyist_salutation,lobbyist_first_name,lobbyist_last_name):
-        return True
+        q = '''INSERT INTO lobbyst (lobbyist_id, lobbyist_salutation, lobbyist_first_name, lobbyist_last_name)
+            values (%s, %s, %s, %s);'''
+        p = (lobbyist_id, lobbyist_salutation, lobbyist_first_name, lobbyist_last_name, )
+        with self.conn.cursor() as cur:
+            cur.execute(q, p))
 
+        q = '''INSERT INTO connection (lobbyist_id, employer_id, client_id)
+            values (%s, %s, %s);'''
+        p = (lobbyist_id, employer_id, client_id,)
+        with self.conn.cursor() as cur:
+            cur.execute(q, p))
     #Insert an expenditure. IDs are ints. amount can be rounded to int.
     #Recipient is a string which can be limited to 250 characters
     def insertExpenditure(self, expenditure_id, lobbyist_id, action, amount, expenditure_date, purpose, recipient, client_id):
