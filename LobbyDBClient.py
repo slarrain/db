@@ -34,43 +34,46 @@ class client:
         with self.conn.cursor() as cur:
             cur.execute(q, p)
         if cur.fetchall():
-            return True
-        else:
             return False
+        else:
+            return True
     #Note that a client may be loaded multiple times. Only load once per client_id. optional extra credit: update if value changes
     def loadClient(self, client_id, name, address1, address2, city, state, zip):
-
-        q = """INSERT INTO client (client_id, name, address1, address2, city, state, zip)
-            values (%s, %s, %s, %s, %s, %s, %s);"""
-        p = (client_id, name, address1, address2, city, state, zip, )
-        with self.conn.cursor() as cur:
-            cur.execute(q, p)
+        if self.check_loaded(client_id, 'client'):
+            q = """INSERT INTO client (client_id, name, address1, address2, city, state, zip)
+                values (%s, %s, %s, %s, %s, %s, %s);"""
+            p = (client_id, name, address1, address2, city, state, zip, )
+            with self.conn.cursor() as cur:
+                cur.execute(q, p)
 
     #Load an employer.
     #Note that an employer may get loaded multiple times. only load once per employer_id.  Only load once per client_id. optional extra credit: update if value changes
     def loadEmployer(self, employer_id, name, address1, address2, city, state, zip):
-        q = '''INSERT INTO employer (employer_id, name, address1, address2, city, state, zip)
-            values (%s, %s, %s, %s, %s, %s, %s);'''
-        p = (employer_id, name, address1, address2, city, state, zip, )
-        with self.conn.cursor() as cur:
-            cur.execute(q, p))
+        if self.check_loaded(employer_id, 'employer'):
+            q = '''INSERT INTO employer (employer_id, name, address1, address2, city, state, zip)
+                values (%s, %s, %s, %s, %s, %s, %s);'''
+            p = (employer_id, name, address1, address2, city, state, zip, )
+            with self.conn.cursor() as cur:
+                cur.execute(q, p))
 
     #Loads a lobbyist. Creates a connection for a lobbyist an employer and client
     #Note that this can be called multiple times per lobbyist. Load one Lobbyist per lobbyist_id.
     # Only load once per client_id. optional extra credit: update if value changes
     #Each connection/relationship should be recorded.
     def loadLobbyistAndCreateEmployerClientConnection(self, lobbyist_id, employer_id, client_id, lobbyist_salutation,lobbyist_first_name,lobbyist_last_name):
-        q = '''INSERT INTO lobbyst (lobbyist_id, lobbyist_salutation, lobbyist_first_name, lobbyist_last_name)
-            values (%s, %s, %s, %s);'''
-        p = (lobbyist_id, lobbyist_salutation, lobbyist_first_name, lobbyist_last_name, )
-        with self.conn.cursor() as cur:
-            cur.execute(q, p))
+        if self.check_loaded(lobbyst_id, 'lobbyst'):
+            q = '''INSERT INTO lobbyst (lobbyist_id, lobbyist_salutation, lobbyist_first_name, lobbyist_last_name)
+                values (%s, %s, %s, %s);'''
+            p = (lobbyist_id, lobbyist_salutation, lobbyist_first_name, lobbyist_last_name, )
+            with self.conn.cursor() as cur:
+                cur.execute(q, p))
 
         q = '''INSERT INTO connection (lobbyist_id, employer_id, client_id)
             values (%s, %s, %s);'''
         p = (lobbyist_id, employer_id, client_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p))
+
     #Insert an expenditure. IDs are ints. amount can be rounded to int.
     #Recipient is a string which can be limited to 250 characters
     def insertExpenditure(self, expenditure_id, lobbyist_id, action, amount, expenditure_date, purpose, recipient, client_id):
