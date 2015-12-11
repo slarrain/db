@@ -3,7 +3,6 @@ import psycopg2
 class client:
     def __init__(self):
         self.conn = None
-        #self.cur = None
 
     #open a connection to a psql database
     def openConnection(self):
@@ -12,11 +11,9 @@ class client:
         try:
             self.conn = psycopg2.connect(conn_string)
             print "Connected"
-            #self.cur = self.conn.cursor()
-            #return True
         except:
             print "Connection Failed!"
-            #return False
+
 
     #Close any active connection(should be able to handle closing a closed conn)
     def closeConnection(self):
@@ -25,8 +22,9 @@ class client:
             print "Closing Connection"
         else:
             print "Connection already closed"
-        #return True
 
+    #Checks if a client, employer or lobbyst has been loaded already to the DB
+    #Return True if not
     def check_loaded (rid, relation):
         relation_id = relation+'_id'
         q = """SELECT COUNT(*) FROM (%s) WHERE (%s)=(%s);"""
@@ -37,6 +35,7 @@ class client:
             return False
         else:
             return True
+
     #Note that a client may be loaded multiple times. Only load once per client_id. optional extra credit: update if value changes
     def loadClient(self, client_id, name, address1, address2, city, state, zip):
         if self.check_loaded(client_id, 'client'):
@@ -89,7 +88,7 @@ class client:
         p = (expenditure_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
-        records = cur.fetchall()
+            records = cur.fetchall()
         if records:
             return records
 
