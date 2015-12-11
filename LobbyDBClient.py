@@ -54,7 +54,7 @@ class client:
                 values (%s, %s, %s, %s, %s, %s, %s);'''
             p = (employer_id, name, address1, address2, city, state, zip, )
             with self.conn.cursor() as cur:
-                cur.execute(q, p))
+                cur.execute(q, p)
 
     #Loads a lobbyist. Creates a connection for a lobbyist an employer and client
     #Note that this can be called multiple times per lobbyist. Load one Lobbyist per lobbyist_id.
@@ -66,13 +66,13 @@ class client:
                 values (%s, %s, %s, %s);'''
             p = (lobbyist_id, lobbyist_salutation, lobbyist_first_name, lobbyist_last_name, )
             with self.conn.cursor() as cur:
-                cur.execute(q, p))
+                cur.execute(q, p)
 
         q = '''INSERT INTO connection (lobbyist_id, employer_id, client_id)
             values (%s, %s, %s);'''
         p = (lobbyist_id, employer_id, client_id,)
         with self.conn.cursor() as cur:
-            cur.execute(q, p))
+            cur.execute(q, p)
 
     #Insert an expenditure. IDs are ints. amount can be rounded to int.
     #Recipient is a string which can be limited to 250 characters
