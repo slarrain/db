@@ -9,7 +9,7 @@ CREATE TABLE client (
     ADDRESS_2     VARCHAR,
     CITY          VARCHAR,
     STATE         VARCHAR,
-    ZIP           INTEGER
+    ZIP           VARCHAR
 );
 
 CREATE INDEX name_idx ON client (NAME);
@@ -17,7 +17,7 @@ CREATE INDEX name_idx ON client (NAME);
 CREATE TABLE compensation (
   COMPENSATION_ID           INTEGER   PRIMARY KEY,
   LOBBYIST_ID               INTEGER,
-  COMPENSATION_AMOUNT       VARCHAR,
+  COMPENSATION_AMOUNT       numeric,
   CLIENT_ID                 INTEGER REFERENCES client (CLIENT_ID)
 );
 
@@ -30,7 +30,7 @@ CREATE TABLE employer (
   ADDRESS_2     VARCHAR,
   CITY          VARCHAR,
   STATE         VARCHAR,
-  ZIP           INTEGER
+  ZIP           VARCHAR
 );
 
 CREATE  INDEX emp_name_idx ON employer (NAME);
@@ -39,7 +39,7 @@ CREATE TABLE expenditures (
   EXPENDITURE_ID            INTEGER   PRIMARY KEY,
   LOBBYIST_ID               INTEGER,
   ACTION                    VARCHAR,
-  AMOUNT                    VARCHAR,
+  AMOUNT                    numeric,
   EXPENDITURE_DATE          DATE,
   PURPOSE                   VARCHAR,
   RECIPIENT                 VARCHAR,
