@@ -96,6 +96,9 @@ class client:
         p = (lobbyist_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
+        records = cur.fetchall()
+        if records:
+            return records
 
     #insert a compensation. IDs are ints, amount can be rounded to int.
     def insertCompensation(self, compensation_id, lobbyist_id, compensation_amount, client_id):
@@ -104,6 +107,9 @@ class client:
         p = (compensation_id, lobbyist_id, int(compensation_amount), client_id)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
+        records = cur.fetchall()
+        if records:
+            return records
 
     #Return a record/tuple for compensation if exists
     def readCompensationById(self, compensation_id):
@@ -111,6 +117,9 @@ class client:
         p = (compensation_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
+        records = cur.fetchall()
+        if records:
+            return records
 
     #Return all records/tuples for compensations by a client_id if exists
     def readCompensationsByClientId(self, client_id):
@@ -118,12 +127,19 @@ class client:
         p = (client_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
+        records = cur.fetchall()
+        if records:
+            return records
+
     #Return all records/tuples for compensations by that are within the amounts (inclusive)
     def readCompensationsInBetween(self, compensation_amount_min,compensation_amount_max):
         q = '''SELECT * FROM compensation WHERE COMPENSATION_AMOUNT >= %s and COMPENSATION_AMOUNT <= %s;'''
         p = (compensation_amount_min, compensation_amount_max,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
+        records = cur.fetchall()
+        if records:
+            return records
 
     #Insert a lobbying activity. action sought and department can be truncated to 250 characters
     def insertActivity(self, lobbying_activity_id, action_sought, deparment, client_id, lobbyist_id):
@@ -139,6 +155,9 @@ class client:
         p = (lobbying_activity_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
+        records = cur.fetchall()
+        if records:
+            return records
 
     #Return the count of lobvying activity on behalf of a client. 0 if none exists
     def countActivityByClientId(self, client_id):
@@ -165,6 +184,9 @@ class client:
         p = (lobbying_activity_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
+        records = cur.fetchall()
+        if records:
+            return records
 
     #Find the client(id) who spent more than the average per client, and received the lowest amount of activity per dollar spent
     def findLeastEfficientClient(self):
