@@ -1,18 +1,22 @@
 import psycopg2
+import sys
 
 class client:
     def __init__(self):
         self.conn = None
+        self.cur = None
 
     #open a connection to a psql database
     def openConnection(self):
-        conn_string = "host='localhost' dbname='lobbydb' user='postgres' password=''"
+        conn_string = "dbname='lobbydb' user='santiago' password='sl2012le2187'"
         print "Opening a Connection"
         try:
             self.conn = psycopg2.connect(conn_string)
             print "Connected"
+            self.cur = self.conn.cursor()
         except:
             print "Connection Failed!"
+            sys.exit(1)
 
 
     #Close any active connection(should be able to handle closing a closed conn)
@@ -23,73 +27,53 @@ class client:
         else:
             print "Connection already closed"
 
-    #Checks if a client, employer or lobbyst has been loaded already to the DB
-    #Return True if not
-    def check_loaded (rid, relation):
-        relation_id = relation+'_id'
-        q = """SELECT COUNT(*) FROM (%s) WHERE (%s)=(%s);"""
-        p = (relation, relation_id, rid, )
-        with self.conn.cursor() as cur:
-            cur.execute(q, p)
-            n = cur.fetchall()
-        if n:
-            return False
-        else:
-            return True
+    def execute(self, q, p):
+        try:
+            self.cur.execute(q, p)
+            self.conn.commit()
+        except:
+            self.conn.rollback()
 
     #Note that a client may be loaded multiple times. Only load once per client_id. optional extra credit: update if value changes
     def loadClient(self, client_id, name, address1, address2, city, state, zip):
-        if self.check_loaded(client_id, 'client'):
-            q = """INSERT INTO client (client_id, name, address1, address2, city, state, zip)
-                values (%s, %s, %s, %s, %s, %s, %s);"""
-            p = (client_id, name, address1, address2, city, state, zip, )
-            with self.conn.cursor() as cur:
-                cur.execute(q, p)
+        q = """INSERT INTO client values (%s, %s, %s, %s, %s, %s, %s);"""
+        p = (client_id, name, address1, address2, city, state, zip)
+        self.execute(q, p)
 
     #Load an employer.
     #Note that an employer may get loaded multiple times. only load once per employer_id.  Only load once per client_id. optional extra credit: update if value changes
     def loadEmployer(self, employer_id, name, address1, address2, city, state, zip):
-        if self.check_loaded(employer_id, 'employer'):
-            q = '''INSERT INTO employer (employer_id, name, address1, address2, city, state, zip)
-                values (%s, %s, %s, %s, %s, %s, %s);'''
-            p = (employer_id, name, address1, address2, city, state, zip, )
-            with self.conn.cursor() as cur:
-                cur.execute(q, p)
+        q = '''INSERT INTO employer values (%s, %s, %s, %s, %s, %s, %s);'''
+        p = (employer_id, name, address1, address2, city, state, zip, )
+        self.execute(q, p)
 
     #Loads a lobbyist. Creates a connection for a lobbyist an employer and client
     #Note that this can be called multiple times per lobbyist. Load one Lobbyist per lobbyist_id.
     # Only load once per client_id. optional extra credit: update if value changes
     #Each connection/relationship should be recorded.
     def loadLobbyistAndCreateEmployerClientConnection(self, lobbyist_id, employer_id, client_id, lobbyist_salutation,lobbyist_first_name,lobbyist_last_name):
-        if self.check_loaded(lobbyst_id, 'lobbyst'):
-            q = '''INSERT INTO lobbyst (lobbyist_id, lobbyist_salutation, lobbyist_first_name, lobbyist_last_name)
-                values (%s, %s, %s, %s);'''
-            p = (lobbyist_id, lobbyist_salutation, lobbyist_first_name, lobbyist_last_name, )
-            with self.conn.cursor() as cur:
-                cur.execute(q, p)
+        q = '''INSERT INTO lobbyst values (%s, %s, %s, %s);'''
+        p = (lobbyist_id, lobbyist_salutation, lobbyist_first_name, lobbyist_last_name, )
+        self.execute(q, p)
 
         q = '''INSERT INTO connection (lobbyist_id, employer_id, client_id)
             values (%s, %s, %s);'''
         p = (lobbyist_id, employer_id, client_id,)
-        with self.conn.cursor() as cur:
-            cur.execute(q, p)
+        self.execute(q, p)
 
     #Insert an expenditure. IDs are ints. amount can be rounded to int.
     #Recipient is a string which can be limited to 250 characters
     def insertExpenditure(self, expenditure_id, lobbyist_id, action, amount, expenditure_date, purpose, recipient, client_id):
-        q = '''INSERT INTO expenditure (expenditure_id, lobbyist_id, action, amount, expenditure_date, purpose, recipient, client_id)
-            values (%s, %s, %s, %s, %s, %s, %s, %s);'''
+        q = '''INSERT INTO expenditure values (%s, %s, %s, %s, %s, %s, %s, %s);'''
         p = (expenditure_id, lobbyist_id, action, amount, expenditure_date, purpose, recipient, client_id,)
-        with self.conn.cursor() as cur:
-            cur.execute(q, p)
+        self.execute(q, p)
 
     #Return a record/tuple for expenditure if exists
     def readExpenditureById(self, expenditure_id):
         q = '''SELECT * FROM expenditure WHERE expenditure_id = (%s);'''
         p = (expenditure_id,)
-        with self.conn.cursor() as cur:
-            cur.execute(q, p)
-            records = cur.fetchall()
+        self.execute(q, p)
+        records = self.cur.fetchall()
         if records:
             return records
 
@@ -97,20 +81,17 @@ class client:
     def readExpendituresByLobbyistId(self, lobbyist_id):
         q = '''SELECT * FROM expenditure WHERE LOBBYIST_ID = %s;'''
         p = (lobbyist_id,)
-        with self.conn.cursor() as cur:
-            cur.execute(q, p)
-            records = cur.fetchall()
+        self.execute(q, p)
+        records = self.cur.fetchall()
         if records:
             return records
 
     #insert a compensation. IDs are ints, amount can be rounded to int.
     def insertCompensation(self, compensation_id, lobbyist_id, compensation_amount, client_id):
-        q = '''INSERT INTO compensation (compensation_id, lobbyist_id, compensation_amount, client_id)
-            values (%s, %s, %s, %s);'''
+        q = '''INSERT INTO compensation values (%s, %s, %s, %s);'''
         p = (compensation_id, lobbyist_id, int(compensation_amount), client_id)
-        with self.conn.cursor() as cur:
-            cur.execute(q, p)
-            records = cur.fetchall()
+        self.execute(q, p)
+        records = self.cur.fetchall()
         if records:
             return records
 
@@ -118,9 +99,8 @@ class client:
     def readCompensationById(self, compensation_id):
         q = '''SELECT * FROM compensation WHERE COMPENSATION_ID = %s;'''
         p = (compensation_id,)
-        with self.conn.cursor() as cur:
-            cur.execute(q, p)
-            records = cur.fetchall()
+        self.execute(q, p)
+        records = self.cur.fetchall()
         if records:
             return records
 
@@ -128,9 +108,8 @@ class client:
     def readCompensationsByClientId(self, client_id):
         q = '''SELECT * FROM compensation WHERE client_id = %s;'''
         p = (client_id,)
-        with self.conn.cursor() as cur:
-            cur.execute(q, p)
-            records = cur.fetchall()
+        self.execute(q, p)
+        records = self.cur.fetchall()
         if records:
             return records
 
@@ -138,27 +117,23 @@ class client:
     def readCompensationsInBetween(self, compensation_amount_min,compensation_amount_max):
         q = '''SELECT * FROM compensation WHERE COMPENSATION_AMOUNT >= %s and COMPENSATION_AMOUNT <= %s;'''
         p = (compensation_amount_min, compensation_amount_max,)
-        with self.conn.cursor() as cur:
-            cur.execute(q, p)
-            records = cur.fetchall()
+        self.execute(q, p)
+        records = self.cur.fetchall()
         if records:
             return records
 
     #Insert a lobbying activity. action sought and department can be truncated to 250 characters
     def insertActivity(self, lobbying_activity_id, action_sought, deparment, client_id, lobbyist_id):
-        q = '''INSERT INTO activity (lobbying_activity_id, action_sought, deparment, client_id, lobbyist_id)
-            values (%s, %s, %s, %s, %s);'''
+        q = '''INSERT INTO activity values (%s, %s, %s, %s, %s);'''
         p = (lobbying_activity_id, action_sought, deparment, client_id, lobbyist_id,)
-        with self.conn.cursor() as cur:
-            cur.execute(q, p)
+        self.execute(q, p)
 
     #Read a lobbying activity by ID if exists
     def readActivityById(self, lobbying_activity_id):
         q = '''SELECT * FROM activity WHERE LOBBYING_ACTIVITY_ID = %s;'''
         p = (lobbying_activity_id,)
-        with self.conn.cursor() as cur:
-            cur.execute(q, p)
-            records = cur.fetchall()
+        self.execute(q, p)
+        records = self.cur.fetchall()
         if records:
             return records
 
@@ -168,9 +143,8 @@ class client:
                 FROM activity
                 WHERE client_id=(%s);'''
         p = (client_id,)
-        with self.conn.cursor() as cur:
-            cur.execute(q, p)
-            n = cur.fetchall()
+        self.execute(q, p)
+        n = self.cur.fetchall()
         if n:
             return int(n)
         else:
@@ -184,9 +158,8 @@ class client:
             GROUP BY LOBBYIST_ID)
             SELECT LOBBYIST_ID,LOBBYIST_FIRST_NAME,LOBBYIST_LAST_NAME FROM temp_table JOIN lobbyist
             on temp_table.LOBBYIST_ID=lobbyist.LOBBYIST_ID WHERE act_per_doll=max(act_per_doll);'''
-        with self.conn.cursor() as cur:
-            cur.execute(q)
-            records = cur.fetchall()
+        self.execute(q, ())
+        records = self.cur.fetchall()
         if records:
             return records
 
@@ -202,7 +175,6 @@ class client:
                             GROUP BY CLIENT_ID)
                 ORDER BY (count_act/spent) ASC
                 LIMIT 1;'''
-        with self.conn.cursor() as cur:
-            cur.execute(q)
-            cid = cur.fetchall()
+        self.execute(q, ())
+        cid = self.cur.fetchall()
         return cid

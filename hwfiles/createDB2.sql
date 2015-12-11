@@ -1,4 +1,6 @@
+DROP DATABASE IF EXISTS lobbydb;
 CREATE DATABASE lobbydb;
+\connect lobbydb
 
 CREATE TABLE client (
     CLIENT_ID     INTEGER   PRIMARY KEY,
