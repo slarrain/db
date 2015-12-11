@@ -75,7 +75,11 @@ class client:
 
     #insert a compensation. IDs are ints, amount can be rounded to int.
     def insertCompensation(self, compensation_id, lobbyist_id, compensation_amount, client_id):
-        return True
+        q = '''INSERT INTO compensation (compensation_id, lobbyist_id, compensation_amount, client_id)
+            values (%s, %s, %s, %s);'''
+        p = (compensation_id, lobbyist_id, int(compensation_amount), client_id)
+        with self.conn.cursor() as cur:
+            cur.execute(q, p)
 
     #Return a record/tuple for compensation if exists
     def readCompensationById(self, compensation_id):
@@ -86,8 +90,10 @@ class client:
 
     #Return all records/tuples for compensations by a client_id if exists
     def readCompensationsByClientId(self, client_id):
-        return True
-
+        q = '''SELECT * FROM compensation WHERE client_id = %s;'''
+        p = (client_id,)
+        with self.conn.cursor() as cur:
+            cur.execute(q, p)
     #Return all records/tuples for compensations by that are within the amounts (inclusive)
     def readCompensationsInBetween(self, compensation_amount_min,compensation_amount_max):
         q = '''SELECT * FROM compensation WHERE COMPENSATION_AMOUNT >= %s and COMPENSATION_AMOUNT <= %s;'''
@@ -97,7 +103,11 @@ class client:
 
     #Insert a lobbying activity. action sought and department can be truncated to 250 characters
     def insertActivity(self, lobbying_activity_id, action_sought, deparment, client_id, lobbyist_id):
-        return True
+        q = '''INSERT INTO activity (lobbying_activity_id, action_sought, deparment, client_id, lobbyist_id)
+            values (%s, %s, %s, %s, %s);'''
+        p = (lobbying_activity_id, action_sought, deparment, client_id, lobbyist_id,)
+        with self.conn.cursor() as cur:
+            cur.execute(q, p)
 
     #Read a lobbying activity by ID if exists
     def readActivityById(self, lobbying_activity_id):
@@ -108,7 +118,13 @@ class client:
 
     #Return the count of lobvying activity on behalf of a client. 0 if none exists
     def countActivityByClientId(self, client_id):
-        return True
+        q = ''' SELECT COUNT UNIQUE (LOBBYING_ACTIVITY_ID)
+                FROM activity
+                WHERE client_id=(%s);'''
+        p = (client_id,)
+        with self.conn.cursor() as cur:
+            cur.execute(q, p)
+        return cur.fetchall()
 
     #Find the lobbyist (id,name) who has the most level of activity per dollar spent
     def findMostProductiveLobbyist(self):
