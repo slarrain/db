@@ -47,7 +47,7 @@ CREATE TABLE activity (
 );
 
 CREATE TABLE lobbyist (
-  LOBBYIST_ID               INTEGER   PRIMARY KEY,
+  LOBBYIST_ID               INTEGER,
   EMPLOYER_ID               INTEGER,
   CLIENT_ID                 INTEGER,
   LOBBYIST_SALUTATION       VARCHAR,
