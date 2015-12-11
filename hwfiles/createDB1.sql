@@ -48,9 +48,13 @@ CREATE TABLE activity (
 
 CREATE TABLE lobbyist (
   LOBBYIST_ID               INTEGER,
-  EMPLOYER_ID               INTEGER,
-  CLIENT_ID                 INTEGER,
   LOBBYIST_SALUTATION       VARCHAR,
   LOBBYIST_FIRST_NAME       VARCHAR,
   LOBBYIST_LAST_NAME        VARCHAR
+);
+
+CREATE TABLE connection (
+  LOBBYIST_ID               INTEGER,
+  EMPLOYER_ID               INTEGER,
+  CLIENT_ID                 INTEGER
 );
