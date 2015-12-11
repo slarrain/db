@@ -181,7 +181,6 @@ class client:
             GROUP BY LOBBYIST_ID)
             SELECT LOBBYIST_ID,LOBBYIST_FIRST_NAME,LOBBYIST_LAST_NAME FROM temp_table JOIN lobbyist
             on temp_table.LOBBYIST_ID=lobbyist.LOBBYIST_ID WHERE act_per_doll=max(act_per_doll);'''
-        p = (lobbying_activity_id,)
         with self.conn.cursor() as cur:
             cur.execute(q, p)
         records = cur.fetchall()
