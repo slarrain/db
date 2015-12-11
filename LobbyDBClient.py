@@ -8,7 +8,7 @@ class client:
 
     #open a connection to a psql database
     def openConnection(self):
-        conn_string = "dbname='lobbydb' user='santiago' password='sl2012le2187'"
+        conn_string = "dbname='lobbydb' user='santiago' password=''"
         print "Opening a Connection"
         try:
             self.conn = psycopg2.connect(conn_string)
