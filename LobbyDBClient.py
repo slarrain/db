@@ -29,24 +29,11 @@ class client:
             print "Connection already closed"
 
     def execute(self, q, p):
-
         try:
             self.cur.execute(q, p)
             self.conn.commit()
-        # except:
-        #     self.conn.rollback()
-
         except psycopg2.IntegrityError:
             self.conn.rollback()
-        # except psycopg2.DataError:
-        #     print "dataerror"
-        #     print q, p
-        # except psycopg2.ProgrammingError:
-        #     print "programmingerror"
-        #     print q, p
-        # except psycopg2.InternalError:
-        #     print "Internal Error"
-        #     print q, p
 
     #Note that a client may be loaded multiple times. Only load once per client_id. optional extra credit: update if value changes
     def loadClient(self, client_id, name, address1, address2, city, state, zip):
