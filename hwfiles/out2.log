@@ -1,0 +1,46 @@
+Opening a Connection
+Connected
+Loading Initial Data
+Time to load base tables :152.035388 (sec) 
+Closing Connection
+Starting 4 processes to read and write lobby activity
+Opening a Connection
+Connected
+Opening a Connection
+Connected
+Opening a Connection
+Connected
+Opening a Connection
+Connected
+Running Operations
+Running Operations
+Running Operations
+Running Operations
+Waiting on 4 processes to finish 
+Getting results
+Load Operation Times
+                           LOAD_LOBBYIST -  Latency Perecentiles(ms) - 50th:3.00, 95th:4.00, 99th:6.00, 100th:26.00 - Count:31063
+                                LOAD_EMP -  Latency Perecentiles(ms) - 50th:2.00, 95th:3.00, 99th:5.00, 100th:39.00 - Count:3047
+                             LOAD_CLIENT -  Latency Perecentiles(ms) - 50th:2.00, 95th:3.00, 99th:4.00, 100th:12.00 - Count:8856
+Operation Times
+  READ_COMP_BY_GREATER_THAN_COMPENSATION -  Latency Perecentiles(ms) - 50th:11.00, 95th:36.00, 99th:48.00, 100th:50.00 - Count:100
+              READ_EXPEND_BY_LOBBYIST_ID -  Latency Perecentiles(ms) - 50th:2.00, 95th:5.00, 99th:8.00, 100th:19.00 - Count:400
+                         INSERT_ACTIVITY -  Latency Perecentiles(ms) - 50th:5.00, 95th:10.00, 99th:15.00, 100th:155.00 - Count:60455
+                         READ_COMP_BY_ID -  Latency Perecentiles(ms) - 50th:2.00, 95th:5.00, 99th:7.00, 100th:26.00 - Count:4596
+                  READ_COMP_BY_CLIENT_ID -  Latency Perecentiles(ms) - 50th:6.00, 95th:11.00, 99th:13.00, 100th:16.00 - Count:500
+                             INSERT_COMP -  Latency Perecentiles(ms) - 50th:5.00, 95th:10.00, 99th:16.00, 100th:152.00 - Count:22984
+                     READ_ACTIVITY_BY_ID -  Latency Perecentiles(ms) - 50th:2.00, 95th:5.00, 99th:8.00, 100th:30.00 - Count:30227
+             COUNT_ACTIVITY_BY_CLIENT_ID -  Latency Perecentiles(ms) - 50th:2.00, 95th:5.00, 99th:8.00, 100th:20.00 - Count:1000
+                       READ_EXPEND_BY_ID -  Latency Perecentiles(ms) - 50th:2.00, 95th:5.00, 99th:9.00, 100th:18.00 - Count:972
+                           INSERT_EXPEND -  Latency Perecentiles(ms) - 50th:4.00, 95th:9.00, 99th:13.00, 100th:46.00 - Count:2917
+Closing Connection
+Closing Connection
+Closing Connection
+Closing Connection
+Opening a Connection
+Connected
+Analyzing Data
+Load Analyze Times
+                MOST_PRODUCTIVE_LOBBYIST -  Latency Perecentiles(ms) - 50th:4.00, 95th:4.00, 99th:4.00, 100th:4.00 - Count:1
+                  LEAST_EFFICIENT_CLIENT -  Latency Perecentiles(ms) - 50th:1.00, 95th:1.00, 99th:1.00, 100th:1.00 - Count:1
+Closing Connection
