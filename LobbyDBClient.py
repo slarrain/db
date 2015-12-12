@@ -190,10 +190,7 @@ class client:
                LIMIT 1;'''
         self.execute(q, ())
         # try:
-        #     self.cur.execute(q)
-        #     self.conn.commit()
-        #     #records = self.cur.fetchall()
-        #     #return records
+            #records = self.cur.fetchall()
+            #return records
         # except:
-        #     self.conn.rollback()
-        #     print "Error. There should be one"
+        #   print "Error. There should be one"
