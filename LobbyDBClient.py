@@ -86,21 +86,23 @@ class client:
         q = '''SELECT * FROM expenditures WHERE expenditure_id = (%s);'''
         p = (expenditure_id,)
         self.execute(q, p)
-        # try:
-        #     records = self.cur.fetchall()
-        #     return records
-        # except:
-        #     return False
+        try:
+            records = self.cur.fetchall()
+            return records
+        except:
+            return False
+
     #Return all records/tuples for expenditures by a lobbyist_id if exists
     def readExpendituresByLobbyistId(self, lobbyist_id):
         q = '''SELECT * FROM expenditures WHERE LOBBYIST_ID = %s;'''
         p = (lobbyist_id,)
         self.execute(q, p)
-        # try:
-        #     records = self.cur.fetchall()
-        #     return records
-        # except:
-        #     return False
+        try:
+            records = self.cur.fetchall()
+            return records
+        except:
+            return False
+
     #insert a compensation. IDs are ints, amount can be rounded to int.
     def insertCompensation(self, compensation_id, lobbyist_id, compensation_amount, client_id):
         q = '''INSERT INTO compensation values (%s, %s, %s, %s);'''
@@ -113,31 +115,34 @@ class client:
         q = '''SELECT * FROM compensation WHERE COMPENSATION_ID = %s;'''
         p = (compensation_id,)
         self.execute(q, p)
-        # try:
-        #     records = self.cur.fetchall()
-        #     return records
-        # except:
-        #     return False
+        try:
+            records = self.cur.fetchall()
+            return records
+        except:
+            return False
+
     #Return all records/tuples for compensations by a client_id if exists
     def readCompensationsByClientId(self, client_id):
         q = '''SELECT * FROM compensation WHERE client_id = %s;'''
         p = (client_id,)
         self.execute(q, p)
-        # try:
-        #     records = self.cur.fetchall()
-        #     return records
-        # except:
-        #     return False
+        try:
+            records = self.cur.fetchall()
+            return records
+        except:
+            return False
+
     #Return all records/tuples for compensations by that are within the amounts (inclusive)
     def readCompensationsInBetween(self, compensation_amount_min,compensation_amount_max):
         q = '''SELECT * FROM compensation WHERE COMPENSATION_AMOUNT >= %s and COMPENSATION_AMOUNT <= %s;'''
         p = (compensation_amount_min, compensation_amount_max,)
         self.execute(q, p)
-        # try:
-        #     records = self.cur.fetchall()
-        #     return records
-        # except:
-        #     return False
+        try:
+            records = self.cur.fetchall()
+            return records
+        except:
+            return ()
+
     #Insert a lobbying activity. action sought and department can be truncated to 250 characters
     def insertActivity(self, lobbying_activity_id, action_sought, deparment, client_id, lobbyist_id):
         q = '''INSERT INTO activity values (%s, %s, %s, %s, %s);'''
@@ -162,11 +167,11 @@ class client:
                 WHERE client_id=(%s);'''
         p = (client_id,)
         self.execute(q, p)
-        # try:
-        #     records = self.cur.fetchall()
-        #     return records
-        # except:
-        #     return 0
+        try:
+            records = self.cur.fetchall()
+            return records
+        except:
+            return 0
 
     #Find the lobbyist (id,name) who has the most level of activity per dollar spent
     def findMostProductiveLobbyist(self):
